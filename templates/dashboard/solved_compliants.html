@@ -1,0 +1,273 @@
+{% extends 'root.html' %}
+{% load static %}
+    {% block content %}
+<!-- Main content -->
+    <style>
+    .content{
+      padding: 20px;
+    }
+    </style>
+
+
+<section class="content">
+    <div class="row">
+  <div class="col-xs-12">
+  <div class="box">
+
+  <div class="box-header with-border">
+    <div class="box-header with-border">
+      {% comment %} <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
+              class="fa fa-plus"></i> Create </a> {% endcomment %}
+    </div>
+
+
+  </div>
+  <div class="box-body">
+    <table id="example1" class="table table-bordered">
+        <thead>
+            <th>Title</th>
+            <th>Details</th>
+            <th>Type</th>
+            <th>Status</th>
+            {% comment %} <th>Action</th> {% endcomment %}
+        </thead>
+        <tbody>
+            {% for compliant in complaints reversed %}
+                
+            <tr>
+                <td>{{ compliant.title}}</td>
+                <td>{{ compliant.details}}</td>
+                <td>{{ compliant.type}}</td>
+
+                {% if compliant.status == "Solved" %}
+                  <td style="width: 100%; background-color: green"></td>
+                {% elif  compliant.status == "Pending" %}
+                  <td style="width: 100%; background-color: red"></td>
+                {% elif  compliant.status == "In Progress" %}
+                  <td style="width: 100%; background-color: green"></td>
+                {% endif %}
+
+                {% comment %} <td>
+                    <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
+                    <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
+                </td> {% endcomment %}
+            </tr>
+            {% endfor %}      
+  
+        </tbody>
+    </table>
+  </div>
+  </div>
+  </div>
+  </div>
+  </section>
+
+  <!-- Button trigger modal -->
+      
+    {% endblock content %}
+
+
+
+    {% block modal %}
+    <!-- Modal -->
+
+
+    <div class="modal fade" id="addnew">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Add Complaint</b></h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="">
+                  {% csrf_token %}
+                 
+                  <div class="modal-body">
+                      {% for field in form  %}
+                      <div class="form-group has-feedback">
+                          <span class="text-danger">{{field.errors}}</span>
+                          {{field.label_tag}}
+                          {{field}}
+                      </div>
+                      {% endfor %}
+    
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="submit" class="btn btn-primary btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    {% comment %} # Edit Modal {% endcomment %}
+    <div class="modal fade" id="edit">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Edit Bank Account</b></h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="">
+                  {% csrf_token %}
+                  <input type="hidden" class="id" name="id">
+                  
+                  <div class="form-group">
+                    <label for="name" class="col-sm-3 control-label">Account Number</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control account" id="account_number" name="account_number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label">Bank</label>
+                  <div class="col-sm-9">
+                    <select name="bank" id="bank" class="form-control bank">
+                      {%  for bank in banks %}
+                        <option value="{{bank.id}}">{{bank.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+              </div>
+    
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label">Account Name</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control account_name" id="account_name" name="account_name">
+                  </div>
+              </div>
+                 
+    
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label">Account Type</label>
+    
+                  <div class="col-sm-9">
+                   <select name="account_type" id="account_type" class="form-control account_type">
+                       <option value="">.....</option>
+                       <option value="current">current</option>
+                       <option value="savings">savings</option>
+                   </select>
+                  </div>
+              </div>
+                 
+    
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label">Bank Branch</label>
+    
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control bank_branch" id="bank_branch" name="bank_branch">
+                  </div>
+              </div>
+                 
+    
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label">Current Balance</label>
+    
+                  <div class="col-sm-9">
+                    <input type="number" class="form-control current_balance" id="current_balance" name="current_balance">
+                  </div>
+              </div>
+    
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
+                </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+
+    # Delete Modal
+    <div class="modal fade" id="delete">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Confirm Deletion</b></h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="">
+                  <input type="hidden" class="id" name="id">
+                  {% csrf_token %}
+                  <div class="text-center">
+                      <p>DELETE BANK ACCOUNT </p>
+                     <h4 class="bold account_number"></h4>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="submit" class="btn btn-danger btn-flat" name="delete"><i class="fa fa-trash"></i> Delete</button>
+                </form>
+              </div>
+          </div>
+      </div>
+    </div>
+    
+    
+    {% endblock modal %}
+
+
+
+
+    {% block script %}
+    <script>
+      $(function() {
+        $(document).on('click', '.edit', function(e) {
+            e.preventDefault();
+            $('#edit').modal('show');
+            var id = $(this).data('id');
+            getRow(id);
+        });
+  
+
+        $(document).on('click', '.delete', function(e) {
+            e.preventDefault();
+            $('#delete').modal('show');
+            var id = $(this).data('id');
+            getRow(id);
+        });
+  
+    });
+
+
+    function getRow(id) {
+        $.ajax({
+            type: 'GET',
+            url: "#",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function(response) {
+                $('.id').val(response.id);
+                $('.account_number').html(response.account_number);
+                $('.account_name').val(response.account_name);
+                $('.account').val(response.account_number);
+                $('.account_type').val(response.account_type);
+                $('.bank_branch').val(response.bank_branch);
+                $('.current_balance').val(response.current_balance);
+                // $('.bank').val(response.bank);
+                $('.bank').val(response.bank_id);
+
+                console.log(response);
+            }
+        });
+    }
+
+    </script>
+    {% endblock script %}
+      

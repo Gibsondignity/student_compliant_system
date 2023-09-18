@@ -1,0 +1,6 @@
+asgiref
+Django
+django-crispy-forms==1.9.0
+Pillow
+pytz
+
