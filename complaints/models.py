@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+from users.models import CustomUser 
 from django.urls import reverse
-from users.models import Employee 
+# from users.models import Employee 
 # Create your models here.
 class Complaint(models.Model):
     status_choices = [
@@ -12,11 +12,25 @@ class Complaint(models.Model):
     ]
     
     type_choices = (('Class Room', 'Class Room'), ('Campus', 'Campus'), ('Library', 'Library'), ('Administration', 'Administration'),)
-    title = models.CharField(max_length=100, verbose_name= 'Enter your complaint')
-    details = models.TextField(verbose_name= 'Explain in more detail')
+    
+    department_choices = (
+        
+        ('Finance and Account', 'Finance and Account'), 
+        ('Faculty of Engineering ', 'Faculty of Engineering'),
+        ('Faculty of Computing and Information System(FoCIS)', 'Faculty of Computing and Information System(FoCIS)'),
+        ('Business school ', 'Business school'),
+        ('Security', 'Security'),
+        ('Library', 'Library'),
+        ('Student Affairs', 'Student Affairs'),
+                          
+    )
+    
+    title = models.CharField(max_length=100, verbose_name= 'Enter your complaint', blank=True)
+    details = models.TextField(verbose_name= 'Explain in more detail', blank=True)
     date_posted = models.DateTimeField(default=timezone.now)
-    type = models.CharField(choices=type_choices, max_length=64, default='Campus')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    type = models.CharField(choices=type_choices, max_length=64, default='Campus', blank=True)
+    department = models.CharField(choices=department_choices, max_length=124, blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(choices=status_choices, default='Pending', max_length=24)
     comment = models.CharField(max_length=265, blank=True, default="")
     

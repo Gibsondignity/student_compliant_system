@@ -23,3 +23,16 @@ class ComplaintForm(forms.ModelForm):
             'details': forms.Textarea(attrs={'class': 'form-control', 'required': True}),
             'type': forms.Select(attrs={'class': 'form-control', 'required': True}),
         }
+        
+        
+class ComplaintFeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ('title', 'details', 'type', 'status', 'comment')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'disabled':'True'}), 
+            'details': forms.Textarea(attrs={'class': 'form-control', 'required': True, 'disabled':'True'}),
+            'type': forms.Select(attrs={'class': 'form-control', 'required': True, 'disabled':'True'}),
+            'status': forms.Select(attrs={'class': 'form-control', 'required': True}),
+            'comment': forms.Select(attrs={'class': 'form-control', 'required': True}),
+        }

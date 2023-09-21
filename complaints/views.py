@@ -7,7 +7,76 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Complaint, Feedback
-from .forms import FeedbackForm, ComplaintForm
+from .forms import FeedbackForm, ComplaintForm, ComplaintFeedbackForm
+from users.models import Staff
+
+
+
+
+@login_required
+def staff_dashboard(request):
+    all_complaints = Complaint.objects.filter().count()
+    solved = Complaint.objects.filter(status='Solved').count()
+    pending = Complaint.objects.filter(status='Pending').count()
+    in_progress = Complaint.objects.filter(status='In Progress').count()
+    
+    staff_name = Staff.objects.filter(employee=request.user).first().department
+    
+    unsolved = pending+in_progress
+    
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name}
+    
+    return render(request, 'dashboard/home.html', context)
+
+
+
+
+
+@login_required
+def staff_solved_compliants(request):
+    
+    staff = Staff.objects.filter(employee=request.user).first()
+    
+    complaints = Complaint.objects.filter(status='Solved', department=staff.department)
+    staff_name = Staff.objects.filter(employee=request.user).first().department
+    print(staff.department)
+    print(complaints)
+    
+    context = {'complaints':complaints, 'staff_name':staff_name}
+    
+    return render(request, 'dashboard/solved_compliants.html', context)
+
+
+
+
+@login_required
+def staff_unsolved_compliants(request):
+    #ComplaintFeedbackForm
+    staff = Staff.objects.filter(employee=request.user).first()
+    
+    complaints = Complaint.objects.filter(department=staff.department)
+    staff_name = Staff.objects.filter(employee=request.user).first().department
+    context = {'complaints':complaints, 'staff_name':staff_name}
+    
+    
+    if request.method == "POST":
+        id = request.POST.get('id')
+        
+        compliant = Complaint.objects.filter(id=id).last()
+        print(complaints)
+        form = ComplaintFeedbackForm(request.POST, instance=compliant)
+        
+        if form.is_valid():
+            form.save()
+            
+            messages.success(request, 'Compliant updated successfully')
+        else:
+            print(form.errors.as_text())
+            messages.error(request, 'Compliant not updated')
+    
+    return render(request, 'dashboard/unsolved_compliants.html', context)
+
+
 
 
 
@@ -23,6 +92,8 @@ def dashboard(request):
     context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved}
     
     return render(request, 'dashboard/home.html', context)
+
+
 
 
 
@@ -53,6 +124,8 @@ def make_complain(request):
 
 
 
+
+@login_required
 def solved_compliants(request):
     
     complaints = Complaint.objects.filter(user=request.user, status='Solved')
@@ -62,7 +135,7 @@ def solved_compliants(request):
     return render(request, 'dashboard/solved_compliants.html', context)
 
 
-
+@login_required
 def unsolved_compliants(request):
     
     complaints = Complaint.objects.filter(user=request.user)
@@ -127,5 +200,7 @@ def viewCompliant(request):
         context["type"] = compliant.type
         context["details"] = compliant.details
         context["title"] = compliant.title
+        context["status"] = compliant.status
+        context["comment"] = compliant.comment
     print(context)
     return JsonResponse(context)

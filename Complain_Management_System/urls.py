@@ -35,6 +35,13 @@ urlpatterns = [
     path('viewCompliant/', views.viewCompliant ,name='viewCompliant'),
     path('update_compliant/', views.update_compliant ,name='update_compliant'),
     path('delete_compliant/', views.delete_compliant ,name='delete_compliant'),
+    
+    
+    path('staff_dashboard/', views.staff_dashboard ,name='staff_dashboard'),
+    path('staff_solved_compliants/', views.staff_solved_compliants ,name='staff_solved_compliants'),
+    path('staff_unsolved_compliants/', views.staff_unsolved_compliants ,name='staff_unsolved_compliants'),
+    
+    
 ]
 urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns +=  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
