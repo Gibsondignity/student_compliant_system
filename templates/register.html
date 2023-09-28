@@ -65,4 +65,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    //$("#div_id_password"). click(function(){ this. type = 'password'; });
+    //$("#div_id_confirm_password"). click(function(){ this. type = 'password'; });
+
+    $(document).ready(function() {
+        
+        //$("#div_id_password").on(function(){ this. type = 'password'; });
+        //$("#div_id_confirm_password").click(function(){ this. type = 'password'; });
+        
+        $("#div_id_password").attr("type", "password");
+        $("#div_id_confirm_password").attr("type", "password");
+
+
+        //$("#div_id_password").on('keyup', function(e){
+        //    $("#div_id_password").attr("type", "password");
+        //});
+
+        //$("#div_id_confirm_password").on('keyup', function(e){
+            
+        //        var new_pass = $("#div_id_confirm_password").attr("type", "password");
+         //       console.log(new_pass)
+        //        $(this).val(new_pass)
+            
+        //});
+
+    });
+    
+
+</script>
 {% endblock content %}

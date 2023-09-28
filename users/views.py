@@ -37,11 +37,11 @@ def login_request(request):
 
 def register(request):
 	if request.method == "POST":
-		form = NewUserForm(request.POST)
+		form = NewUserForm(request.POST or None)
 		if form.is_valid():
 			user = form.save()
 			login(request, user)
-			messages.success(request, "Registration successful." )
+			messages.success(request, "Registration successful.")
 			return redirect("login")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()

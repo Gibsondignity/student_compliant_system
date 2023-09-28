@@ -14,11 +14,16 @@ class NewUserForm(forms.ModelForm):
 
 	class Meta:
 		model = CustomUser
-		fields = ("student_id", "email", "password")
+		fields = ("student_id", "first_name", "last_name", "email", "password", "confirm_password")
 		
-	def save(self, commit=True):
-		user = super(NewUserForm, self).save(commit=False)
-		user.email = self.cleaned_data['email']
-		if commit:
-			user.save()
-		return user
+	widgets = {
+		'password': forms.PasswordInput(attrs={'class': 'form-control', 'required': True}),
+		'confirm_password': forms.PasswordInput(attrs={'class': 'form-control', 'required': True}),
+	}
+ 
+	# def save(self, commit=True):
+	# 	user = super(NewUserForm, self).save(commit=False)
+	# 	user.email = self.cleaned_data['email']
+	# 	if commit:
+	# 		user.save()
+	# 	return user
