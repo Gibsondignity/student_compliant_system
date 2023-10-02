@@ -44,7 +44,33 @@
                     {% csrf_token %}
                     <fieldset class="form-group">
                         <legend class="border-bottom pt-4 pb-4 text-center" style="color: black;">Sign In</legend>
-                        {{ form|crispy }}
+                        {% comment %} {{ form|crispy }} {% endcomment %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <input type="text" id="student_id" name="{{form.username.name}}" class="form-control" />
+                              <label class="form-label" for="name">Student ID</label>
+                            </div>
+                          </div>
+        
+                          <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <input type="password" id="password" name="{{form.password.name}}" class="form-control" />
+                              <label class="form-label" for="password">Password</label>
+                            </div>
+                          </div>
+        
+                          
+
                     </fieldset>
                     <div class="form-group">
                         <button class="btn w-100 loginBtn" type="submit">Log in</button>
