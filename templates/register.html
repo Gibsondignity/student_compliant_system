@@ -19,7 +19,7 @@
     }
     body{
         //background-color: #F0EFF4;
-        background-image: url("{% static 'img/gatehouse1.jpg' %}");
+        background-image: url("{% static 'img/background_admin.jpg' %}");
         //background-repeat: no-repeat;
         background-size: cover;
     }
@@ -39,8 +39,8 @@
 {% block content %}
 <div class="register">
     <div class="heading pt-4 pb-4 text-center">
-        <h3>Create your account</h3>
-    </div>
+        {% comment %} <h3>Create your account</h3> {% endcomment %}
+    </div> 
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-5 col-md-5 register-body pl-4 pr-4 pb-4">
@@ -62,7 +62,7 @@
                             <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                             <div class="form-outline flex-fill mb-0">
                               <input type="text" id="student_id" name="{{form.username.name}}" class="form-control" />
-                              <label class="form-label" for="name">Student ID</label>
+                              <label class="form-label" for="name">Staff ID</label>
                             </div>
                           </div>
         

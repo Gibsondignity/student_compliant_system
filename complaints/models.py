@@ -15,13 +15,15 @@ class Complaint(models.Model):
     
     department_choices = (
         
-        ('Finance and Account', 'Finance and Account'), 
-        ('Faculty of Engineering ', 'Faculty of Engineering'),
-        ('Faculty of Computing and Information System(FoCIS)', 'Faculty of Computing and Information System(FoCIS)'),
-        ('Business school ', 'Business school'),
-        ('Security', 'Security'),
-        ('Library', 'Library'),
-        ('Student Affairs', 'Student Affairs'),
+        ('Heavy duty and light vehicle ', 'Heavy duty and light vehicle'), 
+        ('Plant', 'Plant'), 
+        ('Surface mining ', 'Surface mining '), 
+        ('Finance (support services)', 'Finance (support services)'), 
+        ('Underground', 'Underground'), 
+        ('Security and safety department ', 'Security and safety department '), 
+        ('Primus(canteen)', 'Primus(canteen)'), 
+        ('Environment department', 'Environment department'), 
+        
                           
     )
     
