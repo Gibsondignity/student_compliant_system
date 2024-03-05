@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from users import views as user_views
 from complaints import views
+from administrator import views as admin_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -41,6 +42,7 @@ urlpatterns = [
     path('staff_solved_compliants/', views.staff_solved_compliants ,name='staff_solved_compliants'),
     path('staff_unsolved_compliants/', views.staff_unsolved_compliants ,name='staff_unsolved_compliants'),
     
+    path('administrator/login', admin_views.admin_login ,name='admin_login'),
     
 ]
 urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

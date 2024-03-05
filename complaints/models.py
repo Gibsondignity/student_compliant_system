@@ -11,7 +11,7 @@ class Complaint(models.Model):
         ('Solved', 'Solved')
     ]
     
-    type_choices = (('Class Room', 'Class Room'), ('Campus', 'Campus'), ('Library', 'Library'), ('Administration', 'Administration'),)
+    type_choices = (('On Site', 'On Site'), ('Catchment Comminuty', 'Catchment Comminuty'),)
     
     department_choices = (
         
