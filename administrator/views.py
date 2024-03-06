@@ -134,7 +134,7 @@ def all_complaints(request):
             
             #print('Company profile created successfully')
             messages.success(request, 'Compliant created successfully')
-            return redirect(reverse('make_complain'))
+            return redirect(reverse('all_complaints'))
         else:
             messages.error(request, 'Compliant not created')
             #print
@@ -160,7 +160,7 @@ def update_compliant(request):
         else:
             messages.error(request, 'Compliant not updated')
     
-    return redirect(reverse('make_complain'))
+    return redirect(reverse('all_complaints'))
 
 
 
@@ -179,7 +179,7 @@ def delete_compliant(request):
         else:
             messages.error(request, 'Compliant not updated')
     
-    return redirect(reverse('make_complain'))
+    return redirect(reverse('all_complaints'))
 
 
 

@@ -201,5 +201,6 @@ def viewCompliant(request):
         context["title"] = compliant.title
         context["status"] = compliant.status
         context["comment"] = compliant.comment
+        context["department"] = compliant.department
     print(context)
     return JsonResponse(context)
