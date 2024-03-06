@@ -42,9 +42,12 @@ urlpatterns = [
     path('admin_solved_compliants/', admin_views.admin_solved_compliants ,name='admin_solved_compliants'),
     path('admin_unsolved_compliants/', admin_views.admin_unsolved_compliants ,name='admin_unsolved_compliants'),
     path('all_complaints/', admin_views.all_complaints ,name='all_complaints'),
+    path('admin_update_compliant/', admin_views.update_compliant ,name='admin_update_compliant'),
+    path('admin_delete_compliant/', admin_views.delete_compliant ,name='admin_delete_compliant'),
     
     
     path('notifications/', admin_views.view_notifications, name='view_notifications'),
+    path('in-progress/', admin_views.inProgress, name='inprogress'),
     
     path('administrator/login', admin_views.admin_login ,name='admin_login'),
     

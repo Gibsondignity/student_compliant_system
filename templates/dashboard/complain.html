@@ -128,6 +128,25 @@
                       <textarea type="text" class="form-control details" id="details" name="details"></textarea>
                     </div>
                 </div>
+
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label"> department</label>
+    
+                  <div class="col-sm-9">
+                   <select name="department" id="department" class="form-control department">
+
+                       <option value='Heavy duty and light vehicle '> Heavy duty and light vehicle</option> 
+                        <option value='Plant'> Plant</option> 
+                        <option value='Surface mining '> Surface mining </option> 
+                        <option value='Finance (support services)'> Finance (support services)</option> 
+                        <option value='Underground'> Underground</option> 
+                        <option value='Security and safety department '> Security and safety department </option> 
+                        <option value='Primus(canteen)'> Primus(canteen)</option> 
+                        <option value='Environment department'> Environment department</option>
+                        
+                   </select>
+                  </div>
+                </div>
     
                 <div class="form-group">
                   <label for="max_vote" class="col-sm-3 control-label"> Type</label>
@@ -138,7 +157,7 @@
                       <option value='Catchment Comminuty'> Catchment Comminuty</option> 
                    </select>
                   </div>
-              </div>
+                </div>
                 
     
               </div>
@@ -221,6 +240,7 @@
                 $('.title').html(response.title);
                 $('.title').val(response.title);
                 $('.details').val(response.details);
+                $('.department').val(response.department);
                 $('.type').val(response.type);
                 
 

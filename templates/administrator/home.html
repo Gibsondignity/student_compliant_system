@@ -37,7 +37,7 @@
                   <h3 class="card-title">All Complaints</h3>
                   {% comment %} <img class="card-img-top" src="{% static 'img/all.jpeg' %}" alt="Card image cap" style="width: 100%" height ="180px"> {% endcomment %}
                   <p class="card-text">{{all_complaints}}</p>
-                  <a href="{% url 'make_complain' %}" class="btn btn-primary"><span><i class="fa fa-eye" aria-hidden="true"></i><span> View</a>
+                  <a href="{% url 'all_complaints' %}" class="btn btn-primary"><span><i class="fa fa-eye" aria-hidden="true"></i><span> View</a>
                 </div>
               </div>
             </div>
@@ -58,6 +58,16 @@
                   {% comment %} <img class="card-img-top" src="{% static 'img/unsolved.jpeg' %}" alt="Card image cap" style="width: 100%" height ="180px"> {% endcomment %}
                   <p class="card-text">{{unsolved}}</p>
                   <a href="{% url 'admin_unsolved_compliants' %}" class="btn btn-primary"><span><i class="fa fa-eye" aria-hidden="true"></i><span> View</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="card">
+                <div class="card-body">
+                  <h3 class="card-title">In Progress</h3>
+                  {% comment %} <img class="card-img-top" src="{% static 'img/unsolved.jpeg' %}" alt="Card image cap" style="width: 100%" height ="180px"> {% endcomment %}
+                  <p class="card-text">{{in_progress}}</p>
+                  <a href="{% url 'inprogress' %}" class="btn btn-primary"><span><i class="fa fa-eye" aria-hidden="true"></i><span> View</a>
                 </div>
               </div>
             </div>

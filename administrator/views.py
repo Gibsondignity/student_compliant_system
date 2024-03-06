@@ -112,7 +112,7 @@ def admin_dashboard(request):
     notification_count = Notification.objects.filter(is_read=False).count()
     unsolved = pending+in_progress
     
-    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'notification_count':notification_count}
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'notification_count':notification_count, 'in_progress':in_progress}
     
     return render(request, 'administrator/home.html', context)
 
@@ -123,6 +123,7 @@ def all_complaints(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.all()
+    notification_count = Notification.objects.filter(is_read=False).count()
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         #print(form)
@@ -134,13 +135,43 @@ def all_complaints(request):
             
             #print('Company profile created successfully')
             messages.success(request, 'Compliant created successfully')
-            return redirect(reverse('make_complain'))
+            return redirect(reverse('all_complaints'))
         else:
             messages.error(request, 'Compliant not created')
             #print
     
-    context = {'complaints':complaints, 'form':form}
+    context = {'complaints':complaints, 'form':form, 'notification_count':notification_count}
     return render(request, 'administrator/complaints.html', context)
+
+
+
+
+@login_required
+def inProgress(request):
+    
+    form = ComplaintForm()
+    complaints = Complaint.objects.filter(status="In Progress")
+    notification_count = Notification.objects.filter(is_read=False).count()
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        #print(form)
+        if form.is_valid():
+            
+            user_id = form.save(commit=False)
+            user_id.user = request.user
+            user_id.save()
+            
+            #print('Company profile created successfully')
+            messages.success(request, 'Compliant created successfully')
+            return redirect(reverse('all_complaints'))
+        else:
+            messages.error(request, 'Compliant not created')
+            #print
+    
+    context = {'complaints':complaints, 'form':form, 'notification_count':notification_count}
+    return render(request, 'administrator/in_progress.html', context)
+
+
 
 
 
@@ -150,17 +181,23 @@ def update_compliant(request):
         id = request.POST.get('id')
         
         compliant = Complaint.objects.filter(id=id).last()
+        comment = request.POST.get('comment')
+        status = request.POST.get('status')
         
         form = ComplaintForm(request.POST, instance=compliant)
         
         if form.is_valid():
-            form.save()
+            print(comment)
+            new_comment = form.save(commit=False)
+            new_comment.comment = comment
+            new_comment.status = status
+            new_comment.save()
             
             messages.success(request, 'Compliant updated successfully')
         else:
             messages.error(request, 'Compliant not updated')
     
-    return redirect(reverse('make_complain'))
+    return redirect(reverse('all_complaints'))
 
 
 
@@ -179,7 +216,7 @@ def delete_compliant(request):
         else:
             messages.error(request, 'Compliant not updated')
     
-    return redirect(reverse('make_complain'))
+    return redirect(reverse('all_complaints'))
 
 
 

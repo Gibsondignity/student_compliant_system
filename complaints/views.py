@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import  login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Complaint, Feedback
+from .models import Complaint, Feedback, Notification
 from .forms import FeedbackForm, ComplaintForm, ComplaintFeedbackForm
 from users.models import Staff
 
@@ -111,6 +111,8 @@ def make_complain(request):
             user_id.user = request.user
             user_id.save()
             
+            notification = Notification(message=f"New complaint from staff with ID {request.user}")
+            notification.save()
             #print('Company profile created successfully')
             messages.success(request, 'Compliant created successfully')
             return redirect(reverse('make_complain'))
@@ -150,12 +152,15 @@ def update_compliant(request):
         id = request.POST.get('id')
         
         compliant = Complaint.objects.filter(id=id).last()
-        
+        comment = request.POST.get('comment')
         form = ComplaintForm(request.POST, instance=compliant)
         
         if form.is_valid():
+            form.save(commit=False)
+            form.comment = comment
             form.save()
-            
+            notification = Notification(message=f"User with staff ID: {request.user} updated a complaint")
+            notification.save()
             messages.success(request, 'Compliant updated successfully')
         else:
             messages.error(request, 'Compliant not updated')
@@ -201,5 +206,6 @@ def viewCompliant(request):
         context["title"] = compliant.title
         context["status"] = compliant.status
         context["comment"] = compliant.comment
+        context["department"] = compliant.department
     print(context)
     return JsonResponse(context)

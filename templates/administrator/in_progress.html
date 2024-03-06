@@ -102,91 +102,91 @@
 
     {% comment %} # Edit Modal {% endcomment %}
     <div class="modal fade" id="edit">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><b>Edit Complaint</b></h4>
-              </div>
-              <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="{% url 'admin_update_compliant' %}">
-                  {% csrf_token %}
-                  <input type="hidden" class="id" name="id">
-
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title"><b>Edit Complaint</b></h4>
+                </div>
+                <div class="modal-body">
+                  <form class="form-horizontal" method="POST" action="{% url 'admin_update_compliant' %}">
+                    {% csrf_token %}
+                    <input type="hidden" class="id" name="id">
+  
+                    <div class="form-group">
+                      <label for="name" class="col-sm-3 control-label">Complaint</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control title" id="title" name="title">
+                      </div>
+                  </div>
+  
+                   <div class="form-group">
+                      <label for="name" class="col-sm-3 control-label">Description</label>
+                      <div class="col-sm-9">
+                        <textarea type="text" class="form-control details" id="details" name="details"></textarea>
+                      </div>
+                  </div>
+      
                   <div class="form-group">
-                    <label for="name" class="col-sm-3 control-label">Complaint</label>
+                    <label for="max_vote" class="col-sm-3 control-label"> department</label>
+      
                     <div class="col-sm-9">
-                      <input type="text" class="form-control title" id="title" name="title">
+                     <select name="department" id="department" class="form-control department">
+  
+                         <option value='Heavy duty and light vehicle '> Heavy duty and light vehicle</option> 
+                          <option value='Plant'> Plant</option> 
+                          <option value='Surface mining '> Surface mining </option> 
+                          <option value='Finance (support services)'> Finance (support services)</option> 
+                          <option value='Underground'> Underground</option> 
+                          <option value='Security and safety department '> Security and safety department </option> 
+                          <option value='Primus(canteen)'> Primus(canteen)</option> 
+                          <option value='Environment department'> Environment department</option>
+                          
+                     </select>
+                    </div>
+                  </div>
+  
+                  <div class="form-group">
+                    <label for="max_vote" class="col-sm-3 control-label"> Type</label>
+      
+                    <div class="col-sm-9">
+                     <select name="type" id="type" class="form-control type">
+                        <option value='On Site'> On Site </option> 
+                        <option value='Catchment Comminuty'> Catchment Comminuty</option> 
+                     </select>
+                    </div>
+                  </div>
+  
+  
+                  <div class="form-group">
+                    <label for="name" class="col-sm-3 control-label">Comment</label>
+                    <div class="col-sm-9">
+                      <textarea type="text" class="form-control comment" id="comment" name="comment"></textarea>
                     </div>
                 </div>
-
-                 <div class="form-group">
-                    <label for="name" class="col-sm-3 control-label">Description</label>
-                    <div class="col-sm-9">
-                      <textarea type="text" class="form-control details" id="details" name="details"></textarea>
-                    </div>
-                </div>
-    
+  
+  
                 <div class="form-group">
-                  <label for="max_vote" class="col-sm-3 control-label"> department</label>
-    
+                  <label for="name" class="col-sm-3 control-label">Status</label>
                   <div class="col-sm-9">
-                   <select name="department" id="department" class="form-control department">
-
-                       <option value='Heavy duty and light vehicle '> Heavy duty and light vehicle</option> 
-                        <option value='Plant'> Plant</option> 
-                        <option value='Surface mining '> Surface mining </option> 
-                        <option value='Finance (support services)'> Finance (support services)</option> 
-                        <option value='Underground'> Underground</option> 
-                        <option value='Security and safety department '> Security and safety department </option> 
-                        <option value='Primus(canteen)'> Primus(canteen)</option> 
-                        <option value='Environment department'> Environment department</option>
-                        
+                    <select name="status" id="status" class="form-control status">
+                      <option value='Pending'> Pending </option> 
+                      <option value='In Progress'> In Progress</option> 
+                      <option value='Solved'> Solved</option>
                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="max_vote" class="col-sm-3 control-label"> Type</label>
-    
-                  <div class="col-sm-9">
-                   <select name="type" id="type" class="form-control type">
-                      <option value='On Site'> On Site </option> 
-                      <option value='Catchment Comminuty'> Catchment Comminuty</option> 
-                   </select>
-                  </div>
-                </div>
-
-
-                <div class="form-group">
-                  <label for="name" class="col-sm-3 control-label">Comment</label>
-                  <div class="col-sm-9">
-                    <textarea type="text" class="form-control comment" id="comment" name="comment"></textarea>
                   </div>
               </div>
-
-
-              <div class="form-group">
-                <label for="name" class="col-sm-3 control-label">Status</label>
-                <div class="col-sm-9">
-                  <select name="status" id="status" class="form-control status">
-                    <option value='Pending'> Pending </option> 
-                    <option value='In Progress'> In Progress</option> 
-                    <option value='Solved'> Solved</option>
-                 </select>
+      
                 </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                  <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
+                  </form>
             </div>
-    
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-                <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
-                </form>
           </div>
         </div>
       </div>
-    </div>
     
 
 
