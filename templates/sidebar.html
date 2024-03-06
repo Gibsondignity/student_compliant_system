@@ -24,19 +24,29 @@
     <li>
       {% if request.user.is_superuser %}
 
-        <a href="{% url 'staff_dashboard' %}">
+        <a href="{% url 'admin_dashboard' %}">
           <span><i class="fa fa-tachometer" aria-hidden="true"></i><span>
           <span>Dashboard</span>
         </a>
         
-        <a href="{% url 'staff_solved_compliants' %}">
+        <a href="{% url 'admin_solved_compliants' %}">
           <span><i class="fa fa-check" aria-hidden="true"></i><span>
           <span>Solved Compliants</span>
         </a>
 
-        <a href="{% url 'staff_unsolved_compliants' %}">
+        <a href="{% url 'admin_unsolved_compliants' %}">
           <span><i class="fa fa-times" aria-hidden="true"></i><span>
           <span>Unsolved Complaints</span>
+        </a>
+
+        <a href="{% url 'admin_solved_compliants' %}">
+          <span><i class="fa fa-comments-o" aria-hidden="true"></i><span>
+          <span>Feedback</span>
+        </a>
+
+        <a href="{% url 'view_notifications' %}">
+          <span><i class="fa fa-bell" aria-hidden="true"></i><span>
+          <span>Notification {{notification_count}}</span>
         </a>
         
 

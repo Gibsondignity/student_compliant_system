@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from users.forms import NewUserForm
@@ -6,9 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render,redirect, reverse
 
-from complaints.models import Complaint, Feedback
+from complaints.models import Complaint, Feedback, Notification
 from complaints.forms import FeedbackForm, ComplaintForm, ComplaintFeedbackForm
 from users.models import Staff
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def admin_login(request):
@@ -24,7 +26,7 @@ def admin_login(request):
                 if user.is_superuser:
                     login(request, user)
                     messages.info(request, f"You are now logged in as {username}.")
-                    return redirect(reverse('home'))
+                    return redirect(reverse('admin_dashboard'))
                 messages.error(request,"Sorry! You do not have an admin privileges. Login as a staff.")
                 return render(request, 'administrator/login.html', context={"form":form})
             else:
@@ -39,8 +41,8 @@ def admin_login(request):
 
 
 
-
-def staff_dashboard(request):
+@login_required
+def admin_dashboard(request):
     all_complaints = Complaint.objects.filter().count()
     solved = Complaint.objects.filter(status='Solved').count()
     pending = Complaint.objects.filter(status='Pending').count()
@@ -49,17 +51,18 @@ def staff_dashboard(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     
     unsolved = pending+in_progress
+    notification_count = Notification.objects.filter(is_read=False).count()
     
-    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name}
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name, 'notification_count':notification_count}
     
-    return render(request, 'dashboard/home.html', context)
+    return render(request, 'administrator/home.html', context)
 
 
 
 
 
 @login_required
-def staff_solved_compliants(request):
+def admin_solved_compliants(request):
     
     staff = Staff.objects.filter(employee=request.user).first()
     
@@ -67,22 +70,23 @@ def staff_solved_compliants(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     print(staff.department)
     print(complaints)
+    notification_count = Notification.objects.filter(is_read=False).count()
+    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
-    context = {'complaints':complaints, 'staff_name':staff_name}
-    
-    return render(request, 'dashboard/solved_compliants.html', context)
+    return render(request, 'administrator/solved_compliants.html', context)
 
 
 
 
 @login_required
-def staff_unsolved_compliants(request):
+def admin_unsolved_compliants(request):
     #ComplaintFeedbackForm
     staff = Staff.objects.filter(employee=request.user).first()
     
     complaints = Complaint.objects.filter(department=staff.department)
     staff_name = Staff.objects.filter(employee=request.user).first().department
-    context = {'complaints':complaints, 'staff_name':staff_name}
+    notification_count = Notification.objects.filter(is_read=False).count()
+    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
     
     if request.method == "POST":
@@ -100,31 +104,29 @@ def staff_unsolved_compliants(request):
             print(form.errors.as_text())
             messages.error(request, 'Compliant not updated')
     
-    return render(request, 'dashboard/unsolved_compliants.html', context)
+    return render(request, 'administrator/unsolved_compliants.html', context)
 
 
 
 
 
 @login_required
-def dashboard(request):
-    all_complaints = Complaint.objects.filter(user=request.user).count()
-    solved = Complaint.objects.filter(user=request.user, status='Solved').count()
-    pending = Complaint.objects.filter(user=request.user, status='Pending').count()
-    in_progress = Complaint.objects.filter(user=request.user, status='In Progress').count()
-    
+def admin_dashboard(request):
+    all_complaints = Complaint.objects.count()
+    solved = Complaint.objects.filter(status='Solved').count()
+    pending = Complaint.objects.filter(status='Pending').count()
+    in_progress = Complaint.objects.filter(status='In Progress').count()
+    notification_count = Notification.objects.filter(is_read=False).count()
     unsolved = pending+in_progress
     
-    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved}
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'notification_count':notification_count}
     
-    return render(request, 'dashboard/home.html', context)
-
-
+    return render(request, 'administrator/home.html', context)
 
 
 
 @login_required
-def make_complain(request):
+def all_complaints(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.filter(user=request.user)
@@ -145,28 +147,7 @@ def make_complain(request):
             #print
     
     context = {'complaints':complaints, 'form':form}
-    return render(request, 'dashboard/complain.html', context)
-
-
-
-
-@login_required
-def solved_compliants(request):
-    
-    complaints = Complaint.objects.filter(user=request.user, status='Solved')
-    
-    context = {'complaints':complaints}
-    
-    return render(request, 'dashboard/solved_compliants.html', context)
-
-
-@login_required
-def unsolved_compliants(request):
-    
-    complaints = Complaint.objects.filter(user=request.user)
-    context = {'complaints':complaints}
-    
-    return render(request, 'dashboard/unsolved_compliants.html', context)
+    return render(request, 'administrator/complain.html', context)
 
 
 
@@ -229,3 +210,18 @@ def viewCompliant(request):
         context["comment"] = compliant.comment
     print(context)
     return JsonResponse(context)
+
+
+
+def view_notifications(request):
+    notifications = Notification.objects.filter(is_read=False)
+    notification_count = Notification.objects.filter(is_read=False).count()
+    
+    if request.method == 'POST':
+        notification_id = request.POST.get('notification_id')
+        notification = Notification.objects.get(id=notification_id)
+        notification.is_read = True
+        notification.save()
+        return redirect('view_notifications')
+    
+    return render(request, 'administrator/notifications.html', {'notifications': notifications, 'notification_count': notification_count})

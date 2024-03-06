@@ -38,11 +38,17 @@ urlpatterns = [
     path('delete_compliant/', views.delete_compliant ,name='delete_compliant'),
     
     
-    path('staff_dashboard/', views.staff_dashboard ,name='staff_dashboard'),
-    path('staff_solved_compliants/', views.staff_solved_compliants ,name='staff_solved_compliants'),
-    path('staff_unsolved_compliants/', views.staff_unsolved_compliants ,name='staff_unsolved_compliants'),
+    path('admin_dashboard/', admin_views.admin_dashboard ,name='admin_dashboard'),
+    path('admin_solved_compliants/', admin_views.admin_solved_compliants ,name='admin_solved_compliants'),
+    path('admin_unsolved_compliants/', admin_views.admin_unsolved_compliants ,name='admin_unsolved_compliants'),
+    path('all_complaints/', admin_views.all_complaints ,name='all_complaints'),
+    
+    
+    path('notifications/', admin_views.view_notifications, name='view_notifications'),
     
     path('administrator/login', admin_views.admin_login ,name='admin_login'),
+    
+    
     
 ]
 urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
