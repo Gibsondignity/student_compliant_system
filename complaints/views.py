@@ -102,7 +102,6 @@ def make_complain(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.filter(user=request.user)
-    print(complaints)
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         #print(form)

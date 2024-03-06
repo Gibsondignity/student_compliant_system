@@ -16,8 +16,8 @@
 
   <div class="box-header with-border">
     <div class="box-header with-border">
-      <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
-              class="fa fa-plus"></i> Create </a>
+      {% comment %} <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
+              class="fa fa-plus"></i> Create </a> {% endcomment %}
     </div>
 
 
@@ -28,22 +28,36 @@
             <th>Title</th>
             <th>Details</th>
             <th>Type</th>
-            <th>Date</th>
-            <th>Action</th>
+            <th>Status</th>
+
+            {% if request.user.is_staff %}
+              <th>Action</th> 
+            {% endif %}
         </thead>
         <tbody>
             {% for compliant in complaints reversed %}
-                
+                {% if compliant.status == "Pending" or compliant.status == "In Progress" %}
             <tr>
                 <td>{{ compliant.title}}</td>
                 <td>{{ compliant.details}}</td>
                 <td>{{ compliant.type}}</td>
-                <td>{{ compliant.date_posted}}</td>
-                <td>
-                    <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
-                    <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
-                </td>
+
+                {% if compliant.status == "Solved" %}
+                  <td style="width: 50px; background-color: green"></td>
+                {% elif  compliant.status == "Pending" %}
+                  <td style="width: 50px; background-color: red"></td>
+                {% elif  compliant.status == "In Progress" %}
+                  <td style="width: 50px; background-color: yellow"></td>
+                {% endif %}
+
+                {% if request.user.is_staff %}
+                  <td>
+                      <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
+                      <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
+                  </td> 
+                {% endif %}
             </tr>
+              {% endif %}
             {% endfor %}      
   
         </tbody>
@@ -62,7 +76,6 @@
 
     {% block modal %}
     <!-- Modal -->
-
 
     <div class="modal fade" id="addnew">
       <div class="modal-dialog">
@@ -109,7 +122,12 @@
                 <h4 class="modal-title"><b>Edit Complaint</b></h4>
               </div>
               <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="{% url 'update_compliant' %}">
+                {% if request.user.is_staff %}
+                  <form class="form-horizontal" method="POST" action="{% url 'staff_unsolved_compliants' %}">
+                {% else %}
+                  <form class="form-horizontal" method="POST" action="{% url 'update_compliant' %}">
+                {% endif %}
+                
                   {% csrf_token %}
                   <input type="hidden" class="id" name="id">
 
@@ -118,7 +136,7 @@
                     <div class="col-sm-9">
                       <input type="text" class="form-control title" id="title" name="title">
                     </div>
-                </div>
+                  </div>
 
                  <div class="form-group">
                     <label for="name" class="col-sm-3 control-label">Description</label>
@@ -132,14 +150,38 @@
     
                   <div class="col-sm-9">
                    <select name="type" id="type" class="form-control type">
-                      <option value='On Site'> On Site </option> 
-                      <option value='Catchment Comminuty'> Catchment Comminuty</option> 
+                       <option value="">.....</option>
+                       <option value="Class Room">Class Room</option>
+                       <option value="Campus">Campus</option>
+                       <option value="Library">Library</option>
+                       <option value="Administration">Administration</option>
                    </select>
                   </div>
-              </div>
-                
+                </div>
+
+
+                <div class="form-group">
+                  <label for="max_vote" class="col-sm-3 control-label"> Status </label>
     
+                  <div class="col-sm-9">
+                   <select name="status" id="status" class="form-control type status">
+                       <option value="">.....</option>
+                       <option value="Pending">Pending</option>
+                       <option value="In Progress">In Progress</option>
+                       <option value="Solved">Solved</option>
+                   </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="name" class="col-sm-3 control-label">Comment</label>
+                  <div class="col-sm-9">
+                    <textarea type="text" class="form-control comment" id="comment" name="comment" ></textarea>
+                  </div>
+                </div>
               </div>
+
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                 <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
@@ -182,7 +224,11 @@
     
     {% endblock modal %}
 
-
+    {% if request.user.is_staff %}
+    url: "{% url 'viewCompliant' %}",
+  {% else %}
+    url: "{% url 'viewCompliant' %}",
+  {% endif %}
 
 
     {% block script %}
@@ -220,12 +266,15 @@
                 $('.title').val(response.title);
                 $('.details').val(response.details);
                 $('.type').val(response.type);
+                $('.status').val(response.status);
+                $('.comment').val(response.comment);
                 
 
                 console.log(response);
             }
         });
     }
+
 
     </script>
     {% endblock script %}
