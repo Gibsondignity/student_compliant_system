@@ -17,10 +17,11 @@ class FeedbackForm(forms.ModelForm):
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
-        fields = ('title', 'details', 'type')
+        fields = ('title', 'details', 'department', 'type')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'required': True}), 
             'details': forms.Textarea(attrs={'class': 'form-control', 'required': True}),
+            'department': forms.Select(attrs={'class': 'form-control', 'required': True}),
             'type': forms.Select(attrs={'class': 'form-control', 'required': True}),
         }
         

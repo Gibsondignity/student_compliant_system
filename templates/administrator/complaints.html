@@ -16,8 +16,7 @@
 
   <div class="box-header with-border">
     <div class="box-header with-border">
-      <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
-              class="fa fa-plus"></i> Create </a>
+    
     </div>
 
 
@@ -25,21 +24,23 @@
   <div class="box-body">
     <table id="example1" class="table table-bordered">
         <thead>
-            <th>Title</th>
-            <th>Details</th>
-            <th>Type</th>
-            <th>Date</th>
-            <th>Action</th>
-        </thead>
-        <tbody>
-            {% for compliant in complaints reversed %}
-                
-            <tr>
-                <td>{{ compliant.title}}</td>
-                <td>{{ compliant.details}}</td>
-                <td>{{ compliant.type}}</td>
-                <td>{{ compliant.date_posted}}</td>
-                <td>
+          <th>Title</th>
+          <th>Details</th>
+          <th>Type</th>
+          <th>Department</th>
+          <th>Date</th>
+          <th>Action</th>
+      </thead>
+      <tbody>
+          {% for compliant in complaints reversed %}
+              
+          <tr>
+              <td>{{ compliant.title}}</td>
+              <td>{{ compliant.details}}</td>
+              <td>{{ compliant.type}}</td>
+              <td>{{ compliant.department}}</td>
+              <td>{{ compliant.date_posted}}</td>
+              <td>
                     <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
                     <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
                 </td>

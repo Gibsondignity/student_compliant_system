@@ -64,14 +64,9 @@ def admin_dashboard(request):
 @login_required
 def admin_solved_compliants(request):
     
-    staff = Staff.objects.filter(employee=request.user).first()
-    
-    complaints = Complaint.objects.filter(status='Solved', department=staff.department)
-    staff_name = Staff.objects.filter(employee=request.user).first().department
-    print(staff.department)
-    print(complaints)
+    complaints = Complaint.objects.filter(status='Solved')
     notification_count = Notification.objects.filter(is_read=False).count()
-    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
+    context = {'complaints':complaints, 'notification_count':notification_count}
     
     return render(request, 'administrator/solved_compliants.html', context)
 
@@ -81,12 +76,10 @@ def admin_solved_compliants(request):
 @login_required
 def admin_unsolved_compliants(request):
     #ComplaintFeedbackForm
-    staff = Staff.objects.filter(employee=request.user).first()
     
-    complaints = Complaint.objects.filter(department=staff.department)
-    staff_name = Staff.objects.filter(employee=request.user).first().department
+    complaints = Complaint.objects.filter(status='Pending')
     notification_count = Notification.objects.filter(is_read=False).count()
-    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
+    context = {'complaints':complaints, 'notification_count':notification_count}
     
     
     if request.method == "POST":
@@ -129,7 +122,7 @@ def admin_dashboard(request):
 def all_complaints(request):
     
     form = ComplaintForm()
-    complaints = Complaint.objects.filter(user=request.user)
+    complaints = Complaint.objects.all()
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         #print(form)
@@ -147,7 +140,7 @@ def all_complaints(request):
             #print
     
     context = {'complaints':complaints, 'form':form}
-    return render(request, 'administrator/complain.html', context)
+    return render(request, 'administrator/complaints.html', context)
 
 
 
