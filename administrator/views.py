@@ -51,7 +51,7 @@ def admin_dashboard(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     
     unsolved = pending+in_progress
-    notification_count = Notification.objects.filter(is_read=False).acount()
+    notification_count = Notification.objects.filter(is_read=False).count()
     
     context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name, 'notification_count':notification_count}
     
@@ -70,7 +70,7 @@ def admin_solved_compliants(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     print(staff.department)
     print(complaints)
-    notification_count = Notification.objects.filter(is_read=False).acount()
+    notification_count = Notification.objects.filter(is_read=False).count()
     context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
     return render(request, 'administrator/solved_compliants.html', context)
@@ -85,7 +85,7 @@ def admin_unsolved_compliants(request):
     
     complaints = Complaint.objects.filter(department=staff.department)
     staff_name = Staff.objects.filter(employee=request.user).first().department
-    notification_count = Notification.objects.filter(is_read=False).acount()
+    notification_count = Notification.objects.filter(is_read=False).count()
     context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
     
@@ -116,7 +116,7 @@ def admin_dashboard(request):
     solved = Complaint.objects.filter(status='Solved').count()
     pending = Complaint.objects.filter(status='Pending').count()
     in_progress = Complaint.objects.filter(status='In Progress').count()
-    notification_count = Notification.objects.filter(is_read=False).acount()
+    notification_count = Notification.objects.filter(is_read=False).count()
     unsolved = pending+in_progress
     
     context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'notification_count':notification_count}
@@ -126,7 +126,7 @@ def admin_dashboard(request):
 
 
 @login_required
-def all_complain(request):
+def all_complaints(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.filter(user=request.user)
@@ -147,7 +147,7 @@ def all_complain(request):
             #print
     
     context = {'complaints':complaints, 'form':form}
-    return render(request, 'dashboard/complain.html', context)
+    return render(request, 'administrator/complain.html', context)
 
 
 
@@ -215,7 +215,7 @@ def viewCompliant(request):
 
 def view_notifications(request):
     notifications = Notification.objects.filter(is_read=False)
-    notification_count = Notification.objects.filter(is_read=False).acount()
+    notification_count = Notification.objects.filter(is_read=False).count()
     
     if request.method == 'POST':
         notification_id = request.POST.get('notification_id')
@@ -224,4 +224,4 @@ def view_notifications(request):
         notification.save()
         return redirect('view_notifications')
     
-    return render(request, 'notifications.html', {'notifications': notifications, 'notification_count': notification_count})
+    return render(request, 'administrator/notifications.html', {'notifications': notifications, 'notification_count': notification_count})

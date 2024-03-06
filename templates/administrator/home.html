@@ -61,6 +61,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-4">
+              <div class="card">
+                <div class="card-body">
+                  <h3 class="card-title">Notifications</h3>
+                  {% comment %} <img class="card-img-top" src="{% static 'img/unsolved.jpeg' %}" alt="Card image cap" style="width: 100%" height ="180px"> {% endcomment %}
+                  <p class="card-text">{{notification_count}}</p>
+                  <a href="{% url 'view_notifications' %}" class="btn btn-primary"><span><i class="fa fa-eye" aria-hidden="true"></i><span> View</a>
+                </div>
+              </div>
+            </div>
           </div>
 
 
