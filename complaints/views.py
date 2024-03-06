@@ -150,10 +150,12 @@ def update_compliant(request):
         id = request.POST.get('id')
         
         compliant = Complaint.objects.filter(id=id).last()
-        
+        comment = request.POST.get('comment')
         form = ComplaintForm(request.POST, instance=compliant)
         
         if form.is_valid():
+            form.save(commit=False)
+            form.comment = comment
             form.save()
             
             messages.success(request, 'Compliant updated successfully')

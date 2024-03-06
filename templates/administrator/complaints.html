@@ -158,6 +158,12 @@
                   </div>
                 </div>
                 
+                <div class="form-group">
+                  <label for="name" class="col-sm-3 control-label">Comment</label>
+                  <div class="col-sm-9">
+                    <textarea type="text" class="form-control comment" id="comment" name="comment"></textarea>
+                  </div>
+              </div>
     
               </div>
               <div class="modal-footer">
@@ -240,6 +246,7 @@
                 $('.title').val(response.title);
                 $('.details').val(response.details);
                 $('.type').val(response.type);
+                $('.comment').val(response.comment);
                 
 
                 console.log(response);
