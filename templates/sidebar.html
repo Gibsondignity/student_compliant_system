@@ -9,8 +9,8 @@
         <div></div><br><br>
       </div>
       <div class="pull-left info">
-        {% if request.user.is_staff %}
-          <p> {{ staff_name }} </p>
+        {% if request.user.is_superuser %}
+          <p> {{ request.user.email }} </p>
         {% else %}
           <p> {{ request.user }} </p>
         {% endif %}
@@ -22,7 +22,7 @@
 <div class="sidebar-menu">
   <ul>
     <li>
-      {% if request.user.is_staff %}
+      {% if request.user.is_superuser %}
 
         <a href="{% url 'staff_dashboard' %}">
           <span><i class="fa fa-tachometer" aria-hidden="true"></i><span>

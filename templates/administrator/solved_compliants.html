@@ -16,8 +16,8 @@
 
   <div class="box-header with-border">
     <div class="box-header with-border">
-      <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
-              class="fa fa-plus"></i> Create </a>
+      {% comment %} <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i
+              class="fa fa-plus"></i> Create </a> {% endcomment %}
     </div>
 
 
@@ -28,8 +28,11 @@
             <th>Title</th>
             <th>Details</th>
             <th>Type</th>
-            <th>Date</th>
-            <th>Action</th>
+            <th>Comment</th>
+            <th>Status</th>
+            {% if request.user.is_staff %}
+              <th>Action</th>
+            {% endif %} 
         </thead>
         <tbody>
             {% for compliant in complaints reversed %}
@@ -38,11 +41,26 @@
                 <td>{{ compliant.title}}</td>
                 <td>{{ compliant.details}}</td>
                 <td>{{ compliant.type}}</td>
-                <td>{{ compliant.date_posted}}</td>
-                <td>
-                    <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
-                    <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
-                </td>
+                <td>{{ compliant.comment}}</td>
+
+                {% if compliant.status == "Solved" %}
+                  <td style="width: 50px; background-color: green"></td>
+                {% elif  compliant.status == "Pending" %}
+                  <td style="width: 50px; background-color: red"></td>
+                {% elif  compliant.status == "In Progress" %}
+                  <td style="width: 50px; background-color: green"></td>
+                {% endif %}
+
+                {% if request.user.is_staff %}
+                  <td>
+                    {% if request.user.is_staff %}
+
+                    {% else %}
+                      <button class='btn btn-success btn-sm edit btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-edit'></i></button>
+                    {% endif %}
+                      <button class='btn btn-danger btn-sm delete btn-flat' data-id='{{ compliant.id }}'><i class='fa fa-trash'></i> </button>
+                  </td> 
+                {% endif %}
             </tr>
             {% endfor %}      
   
@@ -132,8 +150,11 @@
     
                   <div class="col-sm-9">
                    <select name="type" id="type" class="form-control type">
-                      <option value='On Site'> On Site </option> 
-                      <option value='Catchment Comminuty'> Catchment Comminuty</option> 
+                       <option value="">.....</option>
+                       <option value="Class Room">Class Room</option>
+                       <option value="Campus">Campus</option>
+                       <option value="Library">Library</option>
+                       <option value="Administration">Administration</option>
                    </select>
                   </div>
               </div>
@@ -220,6 +241,8 @@
                 $('.title').val(response.title);
                 $('.details').val(response.details);
                 $('.type').val(response.type);
+                $('.status').val(response.status);
+                $('.comment').val(response.comment);
                 
 
                 console.log(response);
