@@ -43,6 +43,7 @@ def register(request):
 			login(request, user)
 			messages.success(request, "Registration successful.")
 			return redirect("login")
+		print(form.errors.as_data())
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={"form":form})
