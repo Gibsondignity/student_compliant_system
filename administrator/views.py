@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from users.forms import NewUserForm
@@ -6,9 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render,redirect, reverse
 
-from complaints.models import Complaint, Feedback
+from complaints.models import Complaint, Feedback, Notification
 from complaints.forms import FeedbackForm, ComplaintForm, ComplaintFeedbackForm
 from users.models import Staff
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def admin_login(request):
@@ -40,7 +42,7 @@ def admin_login(request):
 
 
 
-def staff_dashboard(request):
+def admin_dashboard(request):
     all_complaints = Complaint.objects.filter().count()
     solved = Complaint.objects.filter(status='Solved').count()
     pending = Complaint.objects.filter(status='Pending').count()
@@ -52,14 +54,14 @@ def staff_dashboard(request):
     
     context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name}
     
-    return render(request, 'dashboard/home.html', context)
+    return render(request, 'administrator/home.html', context)
 
 
 
 
 
 @login_required
-def staff_solved_compliants(request):
+def admin_solved_compliants(request):
     
     staff = Staff.objects.filter(employee=request.user).first()
     
@@ -70,13 +72,13 @@ def staff_solved_compliants(request):
     
     context = {'complaints':complaints, 'staff_name':staff_name}
     
-    return render(request, 'dashboard/solved_compliants.html', context)
+    return render(request, 'administrator/solved_compliants.html', context)
 
 
 
 
 @login_required
-def staff_unsolved_compliants(request):
+def admin_unsolved_compliants(request):
     #ComplaintFeedbackForm
     staff = Staff.objects.filter(employee=request.user).first()
     
@@ -100,14 +102,14 @@ def staff_unsolved_compliants(request):
             print(form.errors.as_text())
             messages.error(request, 'Compliant not updated')
     
-    return render(request, 'dashboard/unsolved_compliants.html', context)
+    return render(request, 'administrator/unsolved_compliants.html', context)
 
 
 
 
 
 @login_required
-def dashboard(request):
+def admin_dashboard(request):
     all_complaints = Complaint.objects.filter(user=request.user).count()
     solved = Complaint.objects.filter(user=request.user, status='Solved').count()
     pending = Complaint.objects.filter(user=request.user, status='Pending').count()
@@ -117,56 +119,9 @@ def dashboard(request):
     
     context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved}
     
-    return render(request, 'dashboard/home.html', context)
+    return render(request, 'administrator/home.html', context)
 
 
-
-
-
-@login_required
-def make_complain(request):
-    
-    form = ComplaintForm()
-    complaints = Complaint.objects.filter(user=request.user)
-    if request.method == 'POST':
-        form = ComplaintForm(request.POST)
-        #print(form)
-        if form.is_valid():
-            
-            user_id = form.save(commit=False)
-            user_id.user = request.user
-            user_id.save()
-            
-            #print('Company profile created successfully')
-            messages.success(request, 'Compliant created successfully')
-            return redirect(reverse('make_complain'))
-        else:
-            messages.error(request, 'Compliant not created')
-            #print
-    
-    context = {'complaints':complaints, 'form':form}
-    return render(request, 'dashboard/complain.html', context)
-
-
-
-
-@login_required
-def solved_compliants(request):
-    
-    complaints = Complaint.objects.filter(user=request.user, status='Solved')
-    
-    context = {'complaints':complaints}
-    
-    return render(request, 'dashboard/solved_compliants.html', context)
-
-
-@login_required
-def unsolved_compliants(request):
-    
-    complaints = Complaint.objects.filter(user=request.user)
-    context = {'complaints':complaints}
-    
-    return render(request, 'dashboard/unsolved_compliants.html', context)
 
 
 
@@ -229,3 +184,19 @@ def viewCompliant(request):
         context["comment"] = compliant.comment
     print(context)
     return JsonResponse(context)
+
+
+
+def view_notifications(request):
+    user = request.user
+    notifications = Notification.objects.filter(recipient=user, is_read=False)
+    notification_count = Notification.objects.filter(recipient=user, is_read=False).acount()
+    
+    if request.method == 'POST':
+        notification_id = request.POST.get('notification_id')
+        notification = Notification.objects.get(id=notification_id)
+        notification.is_read = True
+        notification.save()
+        return redirect('view_notifications')
+    
+    return render(request, 'notifications.html', {'notifications': notifications, 'notification_count': notification_count})
