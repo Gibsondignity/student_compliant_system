@@ -123,6 +123,7 @@ def all_complaints(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.all()
+    notification_count = Notification.objects.filter(is_read=False).count()
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         #print(form)
@@ -139,7 +140,7 @@ def all_complaints(request):
             messages.error(request, 'Compliant not created')
             #print
     
-    context = {'complaints':complaints, 'form':form}
+    context = {'complaints':complaints, 'form':form, 'notification_count':notification_count}
     return render(request, 'administrator/complaints.html', context)
 
 
@@ -150,6 +151,7 @@ def inProgress(request):
     
     form = ComplaintForm()
     complaints = Complaint.objects.filter(status="In Progress")
+    notification_count = Notification.objects.filter(is_read=False).count()
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         #print(form)
@@ -166,7 +168,7 @@ def inProgress(request):
             messages.error(request, 'Compliant not created')
             #print
     
-    context = {'complaints':complaints, 'form':form}
+    context = {'complaints':complaints, 'form':form, 'notification_count':notification_count}
     return render(request, 'administrator/in_progress.html', context)
 
 

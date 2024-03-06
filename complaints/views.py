@@ -159,7 +159,8 @@ def update_compliant(request):
             form.save(commit=False)
             form.comment = comment
             form.save()
-            
+            notification = Notification(message=f"User with staff ID: {request.user} updated a complaint")
+            notification.save()
             messages.success(request, 'Compliant updated successfully')
         else:
             messages.error(request, 'Compliant not updated')
