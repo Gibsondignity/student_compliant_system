@@ -47,6 +47,7 @@ urlpatterns = [
     
     
     path('notifications/', admin_views.view_notifications, name='view_notifications'),
+    path('in-progress/', admin_views.inProgress, name='inprogress'),
     
     path('administrator/login', admin_views.admin_login ,name='admin_login'),
     

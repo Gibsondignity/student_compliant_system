@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import  login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Complaint, Feedback
+from .models import Complaint, Feedback, Notification
 from .forms import FeedbackForm, ComplaintForm, ComplaintFeedbackForm
 from users.models import Staff
 
@@ -111,6 +111,8 @@ def make_complain(request):
             user_id.user = request.user
             user_id.save()
             
+            notification = Notification(message=f"New complaint from staff with ID {request.user}")
+            notification.save()
             #print('Company profile created successfully')
             messages.success(request, 'Compliant created successfully')
             return redirect(reverse('make_complain'))

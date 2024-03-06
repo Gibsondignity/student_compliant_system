@@ -122,8 +122,8 @@
                 <h4 class="modal-title"><b>Edit Complaint</b></h4>
               </div>
               <div class="modal-body">
-                {% if request.user.is_staff %}
-                  <form class="form-horizontal" method="POST" action="{% url 'staff_unsolved_compliants' %}">
+                {% if request.user.is_superuser %}
+                  <form class="form-horizontal" method="POST" action="{% url 'admin_update_compliant' %}">
                 {% else %}
                   <form class="form-horizontal" method="POST" action="{% url 'update_compliant' %}">
                 {% endif %}
