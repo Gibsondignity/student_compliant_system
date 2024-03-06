@@ -22,7 +22,7 @@
 <div class="sidebar-menu">
   <ul>
     <li>
-      {% if request.user.is_staff %}
+      {% if request.user.is_superuser %}
 
         <a href="{% url 'staff_dashboard' %}">
           <span><i class="fa fa-tachometer" aria-hidden="true"></i><span>
