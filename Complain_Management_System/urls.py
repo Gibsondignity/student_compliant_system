@@ -41,6 +41,7 @@ urlpatterns = [
     path('admin_dashboard/', admin_views.admin_dashboard ,name='admin_dashboard'),
     path('admin_solved_compliants/', admin_views.admin_solved_compliants ,name='admin_solved_compliants'),
     path('admin_unsolved_compliants/', admin_views.admin_unsolved_compliants ,name='admin_unsolved_compliants'),
+    path('all_complaints/', admin_views.all_complaints ,name='all_complaints'),
     
     
     path('notifications/', admin_views.view_notifications, name='view_notifications'),

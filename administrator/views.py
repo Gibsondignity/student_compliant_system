@@ -26,7 +26,7 @@ def admin_login(request):
                 if user.is_superuser:
                     login(request, user)
                     messages.info(request, f"You are now logged in as {username}.")
-                    return redirect(reverse('home'))
+                    return redirect(reverse('admin_dashboard'))
                 messages.error(request,"Sorry! You do not have an admin privileges. Login as a staff.")
                 return render(request, 'administrator/login.html', context={"form":form})
             else:
@@ -41,7 +41,7 @@ def admin_login(request):
 
 
 
-
+@login_required
 def admin_dashboard(request):
     all_complaints = Complaint.objects.filter().count()
     solved = Complaint.objects.filter(status='Solved').count()
@@ -51,8 +51,9 @@ def admin_dashboard(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     
     unsolved = pending+in_progress
+    notification_count = Notification.objects.filter(is_read=False).acount()
     
-    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name}
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'staff_name':staff_name, 'notification_count':notification_count}
     
     return render(request, 'administrator/home.html', context)
 
@@ -69,8 +70,8 @@ def admin_solved_compliants(request):
     staff_name = Staff.objects.filter(employee=request.user).first().department
     print(staff.department)
     print(complaints)
-    
-    context = {'complaints':complaints, 'staff_name':staff_name}
+    notification_count = Notification.objects.filter(is_read=False).acount()
+    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
     return render(request, 'administrator/solved_compliants.html', context)
 
@@ -84,7 +85,8 @@ def admin_unsolved_compliants(request):
     
     complaints = Complaint.objects.filter(department=staff.department)
     staff_name = Staff.objects.filter(employee=request.user).first().department
-    context = {'complaints':complaints, 'staff_name':staff_name}
+    notification_count = Notification.objects.filter(is_read=False).acount()
+    context = {'complaints':complaints, 'staff_name':staff_name, 'notification_count':notification_count}
     
     
     if request.method == "POST":
@@ -110,18 +112,42 @@ def admin_unsolved_compliants(request):
 
 @login_required
 def admin_dashboard(request):
-    all_complaints = Complaint.objects.filter(user=request.user).count()
-    solved = Complaint.objects.filter(user=request.user, status='Solved').count()
-    pending = Complaint.objects.filter(user=request.user, status='Pending').count()
-    in_progress = Complaint.objects.filter(user=request.user, status='In Progress').count()
-    
+    all_complaints = Complaint.objects.count()
+    solved = Complaint.objects.filter(status='Solved').count()
+    pending = Complaint.objects.filter(status='Pending').count()
+    in_progress = Complaint.objects.filter(status='In Progress').count()
+    notification_count = Notification.objects.filter(is_read=False).acount()
     unsolved = pending+in_progress
     
-    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved}
+    context = {'all_complaints': all_complaints, 'solved':solved, 'unsolved':unsolved, 'notification_count':notification_count}
     
     return render(request, 'administrator/home.html', context)
 
 
+
+@login_required
+def all_complain(request):
+    
+    form = ComplaintForm()
+    complaints = Complaint.objects.filter(user=request.user)
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        #print(form)
+        if form.is_valid():
+            
+            user_id = form.save(commit=False)
+            user_id.user = request.user
+            user_id.save()
+            
+            #print('Company profile created successfully')
+            messages.success(request, 'Compliant created successfully')
+            return redirect(reverse('make_complain'))
+        else:
+            messages.error(request, 'Compliant not created')
+            #print
+    
+    context = {'complaints':complaints, 'form':form}
+    return render(request, 'dashboard/complain.html', context)
 
 
 
@@ -188,9 +214,8 @@ def viewCompliant(request):
 
 
 def view_notifications(request):
-    user = request.user
-    notifications = Notification.objects.filter(recipient=user, is_read=False)
-    notification_count = Notification.objects.filter(recipient=user, is_read=False).acount()
+    notifications = Notification.objects.filter(is_read=False)
+    notification_count = Notification.objects.filter(is_read=False).acount()
     
     if request.method == 'POST':
         notification_id = request.POST.get('notification_id')
